@@ -96,6 +96,11 @@ function App() {
       setActiveBan("");
       setActivePick(pick.spot);
     }
+
+    if (activeChamp) {
+      updateDraftState("picks", pick.spot, activeChamp);
+      setActiveChamp(null);
+    }
   };
 
   const handlePickRightClick = (e, pick) => {
@@ -130,9 +135,9 @@ function App() {
     }
   };
 
-  const handleChampionDrop = (champ, spot) => {
-    const type = spot.spot.includes("Ban") ? "bans" : "picks";
-    updateDraftState(type, spot.spot, champ);
+  const handleChampionDrop = (champ, banOrPick) => {
+    const type = banOrPick.spot.includes("Ban") ? "bans" : "picks";
+    updateDraftState(type, banOrPick.spot, champ);
   };
 
   return (

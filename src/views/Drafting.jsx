@@ -46,10 +46,10 @@ const Drafting = ({
     e.preventDefault();
   };
 
-  const onDrop = (e, ban) => {
+  const onDrop = (e, spot) => {
     e.preventDefault();
     if (draggedChamp) {
-      handleChampionDrop(draggedChamp, ban);
+      handleChampionDrop(draggedChamp, spot);
       setDraggedChamp(null);
     }
   };
@@ -129,6 +129,8 @@ const Drafting = ({
                 key={pick.spot}
                 onClick={() => handlePickClick(pick)}
                 onContextMenu={(e) => handlePickRightClick(e, pick)}
+                onDragOver={onDragOver}
+                onDrop={(e) => onDrop(e, pick)}
                 className={`flex items-center cursor-pointer ${
                   pick.spot == "B3" && "mb-12"
                 }`}
@@ -198,6 +200,8 @@ const Drafting = ({
                 key={pick.spot}
                 onClick={() => handlePickClick(pick)}
                 onContextMenu={(e) => handlePickRightClick(e, pick)}
+                onDragOver={onDragOver}
+                onDrop={(e) => onDrop(e, pick)}
                 className={`flex cursor-pointer flex-row-reverse items-center ${
                   pick.spot == "R3" && "mb-12"
                 }`}
