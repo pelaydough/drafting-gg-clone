@@ -3,13 +3,11 @@ import helmetIcon from "../assets/helmet-icon.svg";
 import { useState } from "react";
 
 const Drafting = ({
-  bluePicks,
-  redPicks,
-  blueBans,
-  redBans,
+  draftState,
   handleBanClick,
   handleBanRightClick,
   handlePickClick,
+  handlePickRightClick,
   handleChampClick,
   handleChampionDrop,
   activeBan,
@@ -22,8 +20,14 @@ const Drafting = ({
   const [draggedChamp, setDraggedChamp] = useState(null);
 
   const isChampionDisabled = (champ) => {
-    const allPicks = [...bluePicks, ...redPicks];
-    const allBans = [...blueBans, ...redBans];
+    const allPicks = [
+      ...draftState.picks.filter((pick) => pick.spot.startsWith("B")),
+      ...draftState.picks.filter((pick) => pick.spot.startsWith("R")),
+    ];
+    const allBans = [
+      ...draftState.bans.filter((ban) => ban.spot.startsWith("B")),
+      ...draftState.bans.filter((ban) => ban.spot.startsWith("R")),
+    ];
     return (
       allPicks.some((pick) => pick.champion?.name === champ.name) ||
       allBans.some((ban) => ban.champion?.name === champ.name)
@@ -66,72 +70,88 @@ const Drafting = ({
       </div>
       <div className="flex w-full justify-center mb-6">
         <div className="flex gap-2 w-[36%]">
-          {blueBans.map((ban) => (
-            <div
-              key={ban.spot}
-              onClick={() => handleBanClick(ban)}
-              onContextMenu={(e) => handleBanRightClick(e, ban)}
-              onDragOver={onDragOver}
-              onDrop={(e) => onDrop(e, ban)}
-              className={`w-20 h-20 cursor-pointer border-2 overflow-hidden ${
-                activeBan == ban.spot ? "border-yellow-500" : "border-[#090809]"
-              } bg-[#090809] ${ban.spot == "BBan3" && "mr-5"} rounded-lg`}
-            >
-              {ban.champion && (
-                <img
-                  src={ban.champion.imgUrl}
-                  className="w-full h-full object-cover rounded-md"
-                />
-              )}
-            </div>
-          ))}
+          {draftState.bans
+            .filter((ban) => ban.spot.startsWith("B"))
+            .map((ban) => (
+              <div
+                key={ban.spot}
+                onClick={() => handleBanClick(ban)}
+                onContextMenu={(e) => handleBanRightClick(e, ban)}
+                onDragOver={onDragOver}
+                onDrop={(e) => onDrop(e, ban)}
+                className={`w-20 h-20 cursor-pointer border-2 ${
+                  activeBan == ban.spot
+                    ? "border-yellow-500"
+                    : "border-[#090809]"
+                } bg-[#090809] ${ban.spot == "BBan3" && "mr-5"} rounded-lg`}
+              >
+                {ban.champion && (
+                  <img
+                    src={ban.champion.imgUrl}
+                    className="w-full h-full object-cover rounded-md"
+                  />
+                )}
+              </div>
+            ))}
         </div>
         <div className="flex justify-end gap-2 w-[36%]">
-          {redBans.map((ban) => (
-            <div
-              key={ban.spot}
-              onClick={() => handleBanClick(ban)}
-              onContextMenu={(e) => handleBanRightClick(e, ban)}
-              onDragOver={onDragOver}
-              onDrop={(e) => onDrop(e, ban)}
-              className={`w-20 h-20 cursor-pointer border-2 ${
-                activeBan == ban.spot ? "border-yellow-500" : "border-[#090809]"
-              } bg-[#090809] ${ban.spot == "RBan2" && "mr-5"} rounded-lg`}
-            >
-              {ban.champion && (
-                <img
-                  src={ban.champion.imgUrl}
-                  className="w-full h-full object-cover rounded-md"
-                />
-              )}
-            </div>
-          ))}
+          {draftState.bans
+            .filter((ban) => ban.spot.startsWith("R"))
+            .map((ban) => (
+              <div
+                key={ban.spot}
+                onClick={() => handleBanClick(ban)}
+                onContextMenu={(e) => handleBanRightClick(e, ban)}
+                onDragOver={onDragOver}
+                onDrop={(e) => onDrop(e, ban)}
+                className={`w-20 h-20 cursor-pointer border-2 ${
+                  activeBan == ban.spot
+                    ? "border-yellow-500"
+                    : "border-[#090809]"
+                } bg-[#090809] ${ban.spot == "RBan2" && "mr-5"} rounded-lg`}
+              >
+                {ban.champion && (
+                  <img
+                    src={ban.champion.imgUrl}
+                    className="w-full h-full object-cover rounded-md"
+                  />
+                )}
+              </div>
+            ))}
         </div>
       </div>
       <div className="grid grid-cols-12 w-[72%]">
         <div className="flex flex-col gap-2 col-span-2">
-          {bluePicks.map((pick) => (
-            <div
-              key={pick.spot}
-              onClick={() => handlePickClick(pick)}
-              className={`flex items-center cursor-pointer ${
-                pick.spot == "B3" && "mb-12"
-              }`}
-            >
-              <h2 className="righteous-regular mr-3 w-9 text-[#6699FE] text-2xl tracking-widest">
-                {pick.spot}
-              </h2>
+          {draftState.picks
+            .filter((pick) => pick.spot.startsWith("B"))
+            .map((pick) => (
               <div
-                className={`p-4 bg-[#090809] border-2 ${
-                  activePick == pick.spot
-                    ? "border-yellow-500"
-                    : "border-[#090809]"
-                } rounded-lg`}
+                key={pick.spot}
+                onClick={() => handlePickClick(pick)}
+                onContextMenu={(e) => handlePickRightClick(e, pick)}
+                className={`flex items-center cursor-pointer ${
+                  pick.spot == "B3" && "mb-12"
+                }`}
               >
-                <img src={helmetIcon} className="h-[70px]" />
+                <h2 className="righteous-regular mr-3 w-9 text-[#6699FE] text-2xl tracking-widest">
+                  {pick.spot}
+                </h2>
+                <div
+                  className={`${
+                    !pick.champion ? "p-4" : "p-0"
+                  } bg-[#090809] border-2 ${
+                    activePick == pick.spot
+                      ? "border-yellow-500"
+                      : "border-[#090809]"
+                  } rounded-lg overflow-hidden h-[110px]`}
+                >
+                  <img
+                    src={!pick.champion ? helmetIcon : pick.champion.imgUrl}
+                    className={`${!pick.champion ? "h-[70px]" : "h-[106px]"}`}
+                  />
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
         </div>
         <div className="col-span-8 bg-[#090809] rounded-md max-h-[590px]">
           <div className="px-2 pt-2">
@@ -171,28 +191,31 @@ const Drafting = ({
           </div>
         </div>
         <div className="flex flex-col gap-2 col-span-2">
-          {redPicks.map((pick) => (
-            <div
-              key={pick.spot}
-              onClick={() => handlePickClick(pick)}
-              className={`flex cursor-pointer flex-row-reverse items-center ${
-                pick.spot == "R3" && "mb-12"
-              }`}
-            >
-              <h2 className="righteous-regular ml-5 w-9 text-[#FE8180] text-2xl tracking-widest">
-                {pick.spot}
-              </h2>
+          {draftState.picks
+            .filter((pick) => pick.spot.startsWith("R"))
+            .map((pick) => (
               <div
-                className={`p-4 bg-[#090809] border-2 ${
-                  activePick == pick.spot
-                    ? "border-yellow-500"
-                    : "border-[#090809]"
-                } rounded-lg`}
+                key={pick.spot}
+                onClick={() => handlePickClick(pick)}
+                onContextMenu={(e) => handlePickRightClick(e, pick)}
+                className={`flex cursor-pointer flex-row-reverse items-center ${
+                  pick.spot == "R3" && "mb-12"
+                }`}
               >
-                <img src={helmetIcon} className="h-[70px]" />
+                <h2 className="righteous-regular ml-5 w-9 text-[#FE8180] text-2xl tracking-widest">
+                  {pick.spot}
+                </h2>
+                <div
+                  className={`p-4 bg-[#090809] border-2 ${
+                    activePick == pick.spot
+                      ? "border-yellow-500"
+                      : "border-[#090809]"
+                  } rounded-lg overflow-hidden h-[110px]`}
+                >
+                  <img src={helmetIcon} className="h-[70px]" />
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
         </div>
       </div>
     </div>

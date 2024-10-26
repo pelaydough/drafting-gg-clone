@@ -10,94 +10,42 @@ function App() {
   const [activeBan, setActiveBan] = useState("");
   const [activePick, setActivePick] = useState("");
   const [activeChamp, setActiveChamp] = useState(null);
-  const [blueBans, setBlueBans] = useState([
-    {
-      spot: "BBan1",
-      champion: null,
-    },
-    {
-      spot: "BBan2",
-      champion: null,
-    },
-    {
-      spot: "BBan3",
-      champion: null,
-    },
-    {
-      spot: "BBan4",
-      champion: null,
-    },
-    {
-      spot: "BBan5",
-      champion: null,
-    },
-  ]);
-  const [redBans, setRedBans] = useState([
-    {
-      spot: "RBan1",
-      champion: null,
-    },
-    {
-      spot: "RBan2",
-      champion: null,
-    },
-    {
-      spot: "RBan3",
-      champion: null,
-    },
-    {
-      spot: "RBan4",
-      champion: null,
-    },
-    {
-      spot: "RBan5",
-      champion: null,
-    },
-  ]);
-  const [bluePicks, setBluePicks] = useState([
-    {
-      spot: "B1",
-      champion: null,
-    },
-    {
-      spot: "B2",
-      champion: null,
-    },
-    {
-      spot: "B3",
-      champion: null,
-    },
-    {
-      spot: "B4",
-      champion: null,
-    },
-    {
-      spot: "B5",
-      champion: null,
-    },
-  ]);
-  const [redPicks, setRedPicks] = useState([
-    {
-      spot: "R1",
-      champion: null,
-    },
-    {
-      spot: "R2",
-      champion: null,
-    },
-    {
-      spot: "R3",
-      champion: null,
-    },
-    {
-      spot: "R4",
-      champion: null,
-    },
-    {
-      spot: "R5",
-      champion: null,
-    },
-  ]);
+
+  const [draftState, setDraftState] = useState({
+    bans: [
+      { spot: "BBan1", champion: null },
+      { spot: "BBan2", champion: null },
+      { spot: "BBan3", champion: null },
+      { spot: "RBan1", champion: null },
+      { spot: "RBan2", champion: null },
+      { spot: "RBan3", champion: null },
+      { spot: "BBan4", champion: null },
+      { spot: "BBan5", champion: null },
+      { spot: "RBan4", champion: null },
+      { spot: "RBan5", champion: null },
+    ],
+    picks: [
+      { spot: "B1", champion: null },
+      { spot: "B2", champion: null },
+      { spot: "B3", champion: null },
+      { spot: "B4", champion: null },
+      { spot: "B5", champion: null },
+      { spot: "R1", champion: null },
+      { spot: "R2", champion: null },
+      { spot: "R3", champion: null },
+      { spot: "R4", champion: null },
+      { spot: "R5", champion: null },
+    ],
+  });
+
+  const updateDraftState = (type, spot, champion) => {
+    setDraftState((prevState) => ({
+      ...prevState,
+      [type]: prevState[type].map((item) =>
+        item.spot === spot ? { ...item, champion } : item
+      ),
+    }));
+  };
 
   const handleBanClick = (ban) => {
     if (!activeBan && !activePick && !activeChamp) {
@@ -116,25 +64,18 @@ function App() {
       setActivePick("");
       setActiveBan(ban.spot);
     }
+
+    if (activeChamp) {
+      updateDraftState("bans", ban.spot, activeChamp);
+      setActiveChamp(null);
+    }
   };
 
   const handleBanRightClick = (e, ban) => {
     e.preventDefault();
 
     if (ban.champion) {
-      if (ban.spot[0] === "B") {
-        setBlueBans((prevBans) =>
-          prevBans.map((_ban) =>
-            _ban.spot === ban.spot ? { ..._ban, champion: null } : _ban
-          )
-        );
-      } else if (ban.spot[0] === "R") {
-        setRedBans((prevBans) =>
-          prevBans.map((_ban) =>
-            _ban.spot === ban.spot ? { ..._ban, champion: null } : _ban
-          )
-        );
-      }
+      updateDraftState("bans", ban.spot, null);
     }
   };
 
@@ -157,6 +98,14 @@ function App() {
     }
   };
 
+  const handlePickRightClick = (e, pick) => {
+    e.preventDefault();
+
+    if (pick.champion) {
+      updateDraftState("picks", pick.spot, null);
+    }
+  };
+
   const handleChampClick = (champ) => {
     if (!activeBan && !activePick && !activeChamp) {
       setActiveChamp(champ);
@@ -171,37 +120,19 @@ function App() {
     }
 
     if (activeBan) {
-      if (activeBan[0] === "B") {
-        setBlueBans((prevBans) =>
-          prevBans.map((ban) =>
-            ban.spot === activeBan ? { ...ban, champion: champ } : ban
-          )
-        );
-      } else if (activeBan[0] === "R") {
-        setRedBans((prevBans) =>
-          prevBans.map((ban) =>
-            ban.spot === activeBan ? { ...ban, champion: champ } : ban
-          )
-        );
-      }
+      updateDraftState("bans", activeBan, champ);
       setActiveBan("");
+    }
+
+    if (activePick) {
+      updateDraftState("picks", activePick, champ);
+      setActivePick("");
     }
   };
 
-  const handleChampionDrop = (champ, ban) => {
-    if (ban.spot[0] === "B") {
-      setBlueBans((prevBans) =>
-        prevBans.map((_ban) =>
-          _ban.spot === ban.spot ? { ..._ban, champion: champ } : _ban
-        )
-      );
-    } else if (ban.spot[0] === "R") {
-      setRedBans((prevBans) =>
-        prevBans.map((_ban) =>
-          _ban.spot === ban.spot ? { ..._ban, champion: champ } : _ban
-        )
-      );
-    }
+  const handleChampionDrop = (champ, spot) => {
+    const type = spot.spot.includes("Ban") ? "bans" : "picks";
+    updateDraftState(type, spot.spot, champ);
   };
 
   return (
@@ -239,13 +170,11 @@ function App() {
         </div>
         {tabSelected == "drafting" ? (
           <Drafting
-            bluePicks={bluePicks}
-            redPicks={redPicks}
-            blueBans={blueBans}
-            redBans={redBans}
+            draftState={draftState}
             handleBanClick={handleBanClick}
             handleBanRightClick={handleBanRightClick}
             handlePickClick={handlePickClick}
+            handlePickRightClick={handlePickRightClick}
             handleChampClick={handleChampClick}
             activeBan={activeBan}
             activePick={activePick}
