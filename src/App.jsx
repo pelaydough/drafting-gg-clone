@@ -6,12 +6,7 @@ import TierList from "./views/TierList";
 import "./App.css";
 
 function App() {
-  const [tabSelected, setTabSelected] = useState("drafting");
-  const [activeBan, setActiveBan] = useState("");
-  const [activePick, setActivePick] = useState("");
-  const [activeChamp, setActiveChamp] = useState(null);
-
-  const [draftState, setDraftState] = useState({
+  const initalDraftState = {
     bans: [
       { spot: "BBan1", champion: null },
       { spot: "BBan2", champion: null },
@@ -36,7 +31,14 @@ function App() {
       { spot: "R4", champion: null },
       { spot: "R5", champion: null },
     ],
-  });
+  };
+
+  const [tabSelected, setTabSelected] = useState("drafting");
+  const [activeBan, setActiveBan] = useState("");
+  const [activePick, setActivePick] = useState("");
+  const [activeChamp, setActiveChamp] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [draftState, setDraftState] = useState(initalDraftState);
 
   const updateDraftState = (type, spot, champion) => {
     setDraftState((prevState) => ({
@@ -103,6 +105,10 @@ function App() {
     }
   };
 
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
   const handlePickRightClick = (e, pick) => {
     e.preventDefault();
 
@@ -140,6 +146,13 @@ function App() {
     updateDraftState(type, banOrPick.spot, champ);
   };
 
+  const resetDraft = () => {
+    setActiveBan("");
+    setActivePick("");
+    setActiveChamp(null);
+    setDraftState(initalDraftState);
+  };
+
   return (
     <div className="h-screen flex">
       <div className="h-screen bg-[#090809] flex flex-col">
@@ -168,8 +181,18 @@ function App() {
         </div>
       </div>
       <div className="h-screen w-full flex flex-col">
-        <div className="w-full bg-[#1C1D1D] py-2 px-8">
-          <h2 className="roboto-regular text-white text-xl tracking-widest text-right">
+        <div className="w-full bg-[#1C1D1D] py-2 px-8 flex items-center justify-between">
+          <span></span>
+          {tabSelected === "drafting" && (
+            <h2
+              onClick={() => resetDraft()}
+              className="cursor-pointer roboto-regular text-white text-xl mr-4"
+            >
+              RESET
+            </h2>
+          )}
+
+          <h2 className="roboto-regular text-white text-xl tracking-widest">
             SIGN IN
           </h2>
         </div>
@@ -188,6 +211,8 @@ function App() {
             setActivePick={setActivePick}
             setActiveChamp={setActiveChamp}
             handleChampionDrop={handleChampionDrop}
+            searchTerm={searchTerm}
+            handleSearch={handleSearch}
           />
         ) : (
           <TierList />
