@@ -1,6 +1,6 @@
 const About = () => {
 	return (
-		<div className="h-[calc(100vh-44px)] w-full bg-[#101110] text-white flex flex-col justify-center items-center">
+		<div className="h-screen w-full bg-[#101110] text-white flex flex-col justify-center items-center">
 			<div>
 				<h1 className="text-3xl font-thin mb-4">Side Project!</h1>
 				<p className="text-lg font-thin">This is another clone of mine. I loved the look of LS's <a href="https://drafting.gg" className="text-yellow-600">drafting.gg</a> but thought some of the functionality was a little unintuitive or could just be improved upon.</p>

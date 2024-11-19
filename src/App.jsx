@@ -181,16 +181,16 @@ function App() {
         </div>
       </div>
       <div className="h-screen w-full flex flex-col">
-        <div className="w-full bg-[#1C1D1D] py-2 px-8 text-center">
-          {tabSelected === "drafting" && (
-            <h2
-              onClick={() => resetDraft()}
-              className="cursor-pointer roboto-regular text-white text-xl mr-4 hover:text-yellow-600"
-            >
-              RESET
-            </h2>
-          )}
-        </div>
+        {tabSelected === "drafting" && (
+          <div className="w-full bg-[#1C1D1D] py-2 px-8 text-center">
+              <h2
+                onClick={() => resetDraft()}
+                className="cursor-pointer roboto-regular text-white text-xl mr-4 hover:text-yellow-600"
+              >
+                RESET
+              </h2>
+          </div>
+        )}
         {tabSelected == "drafting" ? (
           <Drafting
             draftState={draftState}
