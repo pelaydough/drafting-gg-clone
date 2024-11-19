@@ -30,6 +30,12 @@ export const champions = [
       "https://ddragon.leagueoflegends.com/cdn/14.21.1/img/champion/Alistar.png",
   },
   {
+    name: "Ambessa",
+    roles: ["Top", "Jungle"],
+    imgUrl:
+      "https://ddragon.leagueoflegends.com/cdn/14.22.1/img/champion/Ambessa.png",
+  },
+  {
     name: "Amumu",
     roles: ["Jungle", "Support"],
     imgUrl:
