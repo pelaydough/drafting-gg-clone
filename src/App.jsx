@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import Drafting from "./views/Drafting";
-import TierList from "./views/TierList";
+import About from "./views/About";
 
 import "./App.css";
 
@@ -171,30 +171,25 @@ function App() {
         </div>
         <div
           className={`w-full py-2 px-8 cursor-pointer ${
-            tabSelected != "tier-list" && "hover:bg-[#A66B08]"
-          } ${tabSelected == "tier-list" ? "bg-[#DCA74E]" : "bg-none"}`}
-          onClick={() => setTabSelected("tier-list")}
+            tabSelected != "about" && "hover:bg-[#A66B08]"
+          } ${tabSelected == "about" ? "bg-[#DCA74E]" : "bg-none"}`}
+          onClick={() => setTabSelected("about")}
         >
           <span className="text-white roboto-regular tracking-wider text-xl">
-            Tier List
+            About
           </span>
         </div>
       </div>
       <div className="h-screen w-full flex flex-col">
-        <div className="w-full bg-[#1C1D1D] py-2 px-8 flex items-center justify-between">
-          <span></span>
+        <div className="w-full bg-[#1C1D1D] py-2 px-8 text-center">
           {tabSelected === "drafting" && (
             <h2
               onClick={() => resetDraft()}
-              className="cursor-pointer roboto-regular text-white text-xl mr-4"
+              className="cursor-pointer roboto-regular text-white text-xl mr-4 hover:text-yellow-600"
             >
               RESET
             </h2>
           )}
-
-          <h2 className="roboto-regular text-white text-xl tracking-widest">
-            SIGN IN
-          </h2>
         </div>
         {tabSelected == "drafting" ? (
           <Drafting
@@ -215,7 +210,7 @@ function App() {
             handleSearch={handleSearch}
           />
         ) : (
-          <TierList />
+          <About />
         )}
       </div>
     </div>

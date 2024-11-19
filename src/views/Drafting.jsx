@@ -111,7 +111,7 @@ const Drafting = ({
 
   return (
     <div className="w-full bg-[#101110] h-[calc(100vh-44px)] flex flex-col items-center justify-center">
-      <div className="flex w-full justify-center mb-2">
+      <div className="flex w-full justify-center mb-3">
         <div className="w-[36%] bg-[#3E7AFB] py-2 px-4">
           <h1 className="text-white text-2xl righteous-regular tracking-widest">
             BLUE SIDE
@@ -229,7 +229,7 @@ const Drafting = ({
               ))}
             </div>
           </div>
-          <div className="col-span-8 bg-[#090809] grid grid-cols-6 p-4 pb-6 max-h-[540px] gap-2 overflow-y-scroll overflow-x-hidden custom-scrollbar">
+          <div className="col-span-8 bg-[#090809] grid grid-cols-6 p-4 pb-6 max-h-[580px] gap-2 overflow-y-scroll overflow-x-hidden custom-scrollbar">
             {champions
               .filter((_champ) => {
                 const matchesSearch =
